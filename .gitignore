@@ -1,0 +1,7 @@
+.venv
+wandb
+.DS_Store
+.vscode/
+DubaiDataset/
+models/*.pth
+!models/pytorch_model.pth
