@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-25T23:37:19Z",
+  "model_artifact_name": "models/pytorch_model.pth",
+  "class_names": [
+    "building",
+    "land",
+    "road",
+    "vegetation",
+    "water",
+    "unlabeled"
+  ],
+  "ignore_index": 5,
+  "validation": {
+    "status": "not_run",
+    "reason": "Local DubaiDataset labels and the PyTorch runtime are not available in this clone.",
+    "pixel_accuracy": null,
+    "mean_iou": null,
+    "per_class_iou": [
+      {
+        "class_id": 0,
+        "class_name": "building",
+        "intersection": 0,
+        "union": 0,
+        "iou": null
+      },
+      {
+        "class_id": 1,
+        "class_name": "land",
+        "intersection": 0,
+        "union": 0,
+        "iou": null
+      },
+      {
+        "class_id": 2,
+        "class_name": "road",
+        "intersection": 0,
+        "union": 0,
+        "iou": null
+      },
+      {
+        "class_id": 3,
+        "class_name": "vegetation",
+        "intersection": 0,
+        "union": 0,
+        "iou": null
+      },
+      {
+        "class_id": 4,
+        "class_name": "water",
+        "intersection": 0,
+        "union": 0,
+        "iou": null
+      },
+      {
+        "class_id": 5,
+        "class_name": "unlabeled",
+        "intersection": 0,
+        "union": 0,
+        "iou": null
+      }
+    ],
+    "valid_pixel_count": 0,
+    "ignored_pixel_count": 0,
+    "class_distribution": {
+      "building": 0,
+      "land": 0,
+      "road": 0,
+      "vegetation": 0,
+      "water": 0
+    }
+  },
+  "test": {
+    "status": "not_run",
+    "reason": "Local DubaiDataset labels and the PyTorch runtime are not available in this clone.",
+    "pixel_accuracy": null,
+    "mean_iou": null,
+    "per_class_iou": [
+      {
+        "class_id": 0,
+        "class_name": "building",
+        "intersection": 0,
+        "union": 0,
+        "iou": null
+      },
+      {
+        "class_id": 1,
+        "class_name": "land",
+        "intersection": 0,
+        "union": 0,
+        "iou": null
+      },
+      {
+        "class_id": 2,
+        "class_name": "road",
+        "intersection": 0,
+        "union": 0,
+        "iou": null
+      },
+      {
+        "class_id": 3,
+        "class_name": "vegetation",
+        "intersection": 0,
+        "union": 0,
+        "iou": null
+      },
+      {
+        "class_id": 4,
+        "class_name": "water",
+        "intersection": 0,
+        "union": 0,
+        "iou": null
+      },
+      {
+        "class_id": 5,
+        "class_name": "unlabeled",
+        "intersection": 0,
+        "union": 0,
+        "iou": null
+      }
+    ],
+    "valid_pixel_count": 0,
+    "ignored_pixel_count": 0,
+    "class_distribution": {
+      "building": 0,
+      "land": 0,
+      "road": 0,
+      "vegetation": 0,
+      "water": 0
+    }
+  }
+}

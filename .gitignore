@@ -15,11 +15,9 @@ runs/
 outputs/
 artifacts/
 
-# Local data and generated evaluation artifacts
+# Local data and ad hoc generated artifacts
 DubaiDataset/
 data/
-docs/evaluation/samples/
-docs/evaluation/metrics.json
 
 # Local/editor files
 .DS_Store
