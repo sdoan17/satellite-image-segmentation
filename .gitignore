@@ -1,7 +1,32 @@
-.venv
-wandb
+# Python environments and caches
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Notebook/runtime outputs
+.ipynb_checkpoints/
+wandb/
+runs/
+outputs/
+artifacts/
+
+# Local data and generated evaluation artifacts
+DubaiDataset/
+data/
+docs/evaluation/samples/
+docs/evaluation/metrics.json
+
+# Local/editor files
 .DS_Store
 .vscode/
-DubaiDataset/
+.idea/
+*.swp
+
+# Model artifacts: keep only the primary checkpoint in source control.
 models/*.pth
 !models/pytorch_model.pth

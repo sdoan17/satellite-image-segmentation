@@ -1,225 +1,54 @@
-# Satellite Image Semantic Segmentation Project
+# Satellite Image Semantic Segmentation
 
-## Project Overview
+This repository contains a PyTorch semantic segmentation workflow for satellite imagery. The current baseline is notebook-centered, with a trained model checkpoint and planning docs for turning the work into a portfolio-ready demo.
 
-This project implements an end-to-end semantic segmentation pipeline for satellite imagery.
-The system learns pixel-level land cover classes from labeled satellite tiles.
-It supports training, evaluation, model explanation, and interactive deployment.
+## Current Repository
 
-### Objectives
+- `notebook/segmentation_pytorch.ipynb` is the primary PyTorch training and evaluation notebook.
+- `notebook/segmentation.ipynb` contains the earlier segmentation exploration workflow.
+- `models/pytorch_model.pth` is the selected model checkpoint for future inference and evaluation work.
+- `images/` contains lightweight demo images.
+- `docs/evaluation/classes.json` tracks the class names, RGB mask colors, and ignore index needed outside the ignored dataset directory.
+- `docs/brainstorms/` and `docs/plans/` describe the product direction and implementation plan.
 
-- Learn pixel-to-class mapping for satellite images
-- Train a reproducible semantic segmentation model
-- Explain model predictions using visual attribution
-- Deploy an interactive inference interface
+## Setup
 
----
-
-## Repository Files
-
-### 1. `segmentation.ipynb`
-
-**Training and evaluation notebook**
-
-Responsibilities.
-
-- Load satellite images and segmentation masks
-- Normalize inputs and encode labels
-- Train a semantic segmentation model
-- Track training and validation loss
-- Save trained model weights
-
-This notebook defines model behavior and performance.
-
----
-
-### 2. `gradcam_satellite_segmentation.ipynb`
-
-**Model interpretability notebook**
-
-Responsibilities.
-
-- Load trained segmentation weights
-- Generate Grad-CAM heatmaps
-- Visualize spatial attention regions
-- Diagnose class confusion and failure cases
-
-This notebook explains why predictions occur.
-
----
-
-### 3. `gradio_satellite_segmentation.ipynb`
-
-**Deployment notebook**
-
-Responsibilities.
-
-- Load trained model weights
-- Accept user uploaded satellite images
-- Run inference on demand
-- Display segmentation masks in a web UI
-
-This notebook turns the model into a usable application.
-
----
-
-## Recommended Project Structure
-
-```
-project_root/
-│
-├── data/
-│   ├── images/
-│   └── masks/
-│
-├── models/
-│   └── segmentation_model.pth
-│
-├── notebooks/
-│   ├── segmentation.ipynb
-│   ├── gradcam_satellite_segmentation.ipynb
-│   └── gradio_satellite_segmentation.ipynb
-│
-├── requirements.txt
-└── README.md
-```
-
----
-
-## Environment Setup
-
-### Python Version
-
-- Python 3.9 or newer
-
-### Create Virtual Environment
+Use Python 3.9 or newer.
 
 ```bash
-python -m venv venv
-source venv/bin/activate
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-### Install Dependencies
+The notebooks expect the Dubai satellite dataset at `DubaiDataset/`. That directory is intentionally ignored because it is a local data artifact, not a small source file.
+
+Class metadata that future code and docs need is tracked separately in `docs/evaluation/classes.json`, so later work does not need to depend on ignored `DubaiDataset/classes.json` files.
+
+## Model Artifact Policy
+
+Only `models/pytorch_model.pth` is intentionally kept in this repository. Additional checkpoints are ignored by default.
+
+Large model formats are marked for Git LFS in `.gitattributes`. If Git LFS is available in your environment, enable it before adding or replacing checkpoints:
 
 ```bash
-pip install -r 'requirements.txt'
+git lfs install
+git lfs track "*.pth" "*.pt" "*.ckpt" "*.onnx"
 ```
 
-### GPU Support
+This worktree does not require extra checkpoints for the planned v1 demo.
 
-- Optional
-- CUDA-compatible PyTorch required for acceleration
+## Planned Product Direction
 
----
+The implementation plan in `docs/plans/2026-06-23-001-feat-satellite-demo-deployment-plan.md` breaks the next version into:
 
-## Data Preparation
+1. Repository hygiene and dependency baseline
+2. Extracted PyTorch model and data utilities
+3. Evaluation and demo artifact pipeline
+4. FastAPI inference backend
+5. Vercel frontend demo and case study
+6. Deployment documentation
+7. Portfolio and technical README rewrite
+8. Public GitHub publication
 
-### Input Format
-
-- RGB satellite images
-- Pixel-aligned segmentation masks
-- Each pixel value corresponds to a class ID
-
-### Preprocessing Requirements
-
-- Normalize images to range 0–1
-- Convert masks to 2D class label arrays
-- Ensure image and mask dimensions match
-
-### Data Validation
-
-- No missing files
-- Consistent resolution
-- Reasonable class balance
-
----
-
-## Training
-
-Open `segmentation.ipynb`.
-
-### Steps
-
-1. Configure dataset paths
-2. Set training parameters
-   - Batch size
-   - Learning rate
-   - Epoch count
-3. Run preprocessing cells
-4. Train the model
-5. Save trained weights to `models/`
-
-### Outputs
-
-- Trained segmentation model
-- Training and validation loss curves
-- Sample prediction visualizations
-
----
-
-## Model Explanation
-
-Open `gradcam_satellite_segmentation.ipynb`.
-
-### Steps
-
-1. Load trained model weights
-2. Select target class
-3. Generate Grad-CAM heatmaps
-4. Overlay heatmaps on input images
-
-### Use Cases
-
-- Validate spatial attention
-- Detect spurious correlations
-- Improve labeling or architecture design
-
----
-
-## Deployment
-
-### Local Deployment with Gradio
-
-Open `gradio_satellite_segmentation.ipynb`.
-
-### Steps
-
-1. Load trained model
-2. Run the Gradio app cell
-3. Open the local URL in your browser
-4. Upload a satellite image
-5. View segmentation output
-
-### Deployment Options
-
-- Local interactive demo
-- Hosted notebook services
-- Docker-based deployment
-
----
-
-## Reproducibility
-
-Best practices.
-
-- Fix random seeds
-- Log library versions
-- Save model checkpoints
-- Preserve raw datasets
-
----
-
-## Limitations
-
-- Model quality depends on label accuracy
-- Small datasets increase overfitting risk
-- Grad-CAM provides qualitative insight only
-
----
-
-## Future Extensions
-
-- Multi-class IoU metrics
-- Larger backbone architectures
-- Temporal satellite image modeling
-- Cloud-based inference API
+The immediate next engineering step after this baseline is extracting notebook logic into reusable Python modules under `src/satseg/`.
