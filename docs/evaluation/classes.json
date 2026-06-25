@@ -1,0 +1,43 @@
+{
+  "source": "notebook/segmentation_pytorch.ipynb",
+  "num_classes": 6,
+  "ignore_index": 5,
+  "classes": [
+    {
+      "id": 0,
+      "name": "building",
+      "rgb": [60, 16, 152],
+      "ignored": false
+    },
+    {
+      "id": 1,
+      "name": "land",
+      "rgb": [132, 41, 246],
+      "ignored": false
+    },
+    {
+      "id": 2,
+      "name": "road",
+      "rgb": [110, 193, 228],
+      "ignored": false
+    },
+    {
+      "id": 3,
+      "name": "vegetation",
+      "rgb": [254, 221, 58],
+      "ignored": false
+    },
+    {
+      "id": 4,
+      "name": "water",
+      "rgb": [226, 169, 41],
+      "ignored": false
+    },
+    {
+      "id": 5,
+      "name": "unlabeled",
+      "rgb": [155, 155, 155],
+      "ignored": true
+    }
+  ]
+}
