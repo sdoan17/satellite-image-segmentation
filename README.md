@@ -70,12 +70,15 @@ The current `not_run` metrics mean this repository has the evaluation pipeline a
 
 Use Python 3.9 or newer. Commands are intended to run from the repository root unless noted otherwise.
 
-Public clone path:
+Public clone path for a full checkout, including the model checkpoint:
 
 ```bash
+git lfs install
 git clone https://github.com/sdoan17/satellite-image-segmentation.git
 cd satellite-image-segmentation
 ```
+
+If you only need the docs, frontend, or source code and do not need the checkpoint locally, clone with `GIT_LFS_SKIP_SMUDGE=1` and fetch LFS artifacts later with `git lfs pull`.
 
 ```bash
 python3 -m venv .venv
@@ -196,7 +199,7 @@ python3 -m json.tool docs/evaluation/samples/metadata.json >/dev/null
 
 ## Publication Policy
 
-This public repository intentionally includes source code, documentation, notebooks, curated sample images, generated evaluation JSON, frontend-ready demo artifacts, and the selected [`models/pytorch_model.pth`](models/pytorch_model.pth) checkpoint. The checkpoint is kept in normal Git for portfolio review and backend smoke checks; avoid adding duplicate checkpoints or ad hoc model exports.
+This public repository intentionally includes source code, documentation, notebooks, curated sample images, generated evaluation JSON, frontend-ready demo artifacts, and the selected [`models/pytorch_model.pth`](models/pytorch_model.pth) checkpoint. The checkpoint is managed with Git LFS for portfolio review and backend smoke checks; avoid adding duplicate checkpoints or ad hoc model exports.
 
 Local-only runtime files stay out of the public surface: `.env` files, virtual environments, caches, `node_modules/`, Vercel state, the local `DubaiDataset/` directory, and generated scratch outputs are ignored. Before publishing future updates, run `git status --short --ignored` and review large tracked files with:
 
