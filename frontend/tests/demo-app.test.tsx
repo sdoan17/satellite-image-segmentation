@@ -47,32 +47,36 @@ describe("DemoApp", () => {
   });
 
   it("shows a clear disabled upload state when no inference API URL is configured", async () => {
-    const user = userEvent.setup();
     render(<DemoApp data={data} />);
 
-    await user.upload(screen.getByLabelText(/upload a satellite-style image/i), makeFile());
-
+    expect(screen.getByLabelText(/upload a satellite-style image/i)).toBeDisabled();
     expect(screen.getByText(/live inference is not configured/i)).toBeInTheDocument();
     expect(screen.getByRole("img", { name: /original imagery for 01-image1/i })).toBeInTheDocument();
   });
 
   it("uploads to the configured inference API and renders returned prediction imagery", async () => {
     vi.stubEnv("NEXT_PUBLIC_INFERENCE_API_URL", "https://api.example.test");
-    const fetchMock = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({
-        input: { width: 16, height: 12 },
-        prediction: {
-          format: "png_base64",
-          mask_png_base64: "bWFzaw==",
-          overlay_png_base64: "b3ZlcmxheQ==",
-          classes_present: [0, 4],
-          resized: false,
-        },
-        classes: data.classes,
-        disclaimer: "Model prediction for demonstration only; not authoritative geospatial analysis.",
-      }),
-    });
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ status: "healthy", model_loaded: true, error: null }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          input: { width: 16, height: 12 },
+          prediction: {
+            format: "png_base64",
+            mask_png_base64: "bWFzaw==",
+            overlay_png_base64: "b3ZlcmxheQ==",
+            classes_present: [0, 4],
+            resized: false,
+          },
+          classes: data.classes,
+          disclaimer: "Model prediction for demonstration only; not authoritative geospatial analysis.",
+        }),
+      });
     vi.stubGlobal("fetch", fetchMock);
     const user = userEvent.setup();
     render(<DemoApp data={data} />);
@@ -80,6 +84,7 @@ describe("DemoApp", () => {
     await user.upload(screen.getByLabelText(/upload a satellite-style image/i), makeFile());
 
     await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith("https://api.example.test/health", expect.any(Object));
       expect(fetchMock).toHaveBeenCalledWith("https://api.example.test/predict", expect.any(Object));
     });
     expect(screen.getByRole("img", { name: /uploaded model prediction/i })).toHaveAttribute(
@@ -88,14 +93,36 @@ describe("DemoApp", () => {
     );
   });
 
-  it("keeps curated samples available when upload inference fails", async () => {
+  it("surfaces backend health-down state without breaking curated samples", async () => {
     vi.stubEnv("NEXT_PUBLIC_INFERENCE_API_URL", "https://api.example.test");
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
         ok: false,
-        json: async () => ({ detail: "Model is not loaded; inference is unavailable." }),
+        json: async () => ({ status: "unhealthy", model_loaded: false, error: "checkpoint missing" }),
       }),
+    );
+    render(<DemoApp data={data} />);
+
+    expect(await screen.findByText(/backend health check failed/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/upload a satellite-style image/i)).toBeDisabled();
+    expect(screen.getByRole("img", { name: /original imagery for 01-image1/i })).toBeInTheDocument();
+  });
+
+  it("keeps curated samples available when upload inference fails", async () => {
+    vi.stubEnv("NEXT_PUBLIC_INFERENCE_API_URL", "https://api.example.test");
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ status: "healthy", model_loaded: true, error: null }),
+        })
+        .mockResolvedValueOnce({
+          ok: false,
+          json: async () => ({ detail: "Model is not loaded; inference is unavailable." }),
+        }),
     );
     const user = userEvent.setup();
     render(<DemoApp data={data} />);

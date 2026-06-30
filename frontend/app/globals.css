@@ -259,6 +259,12 @@ figcaption {
   text-align: center;
 }
 
+.upload-target-disabled {
+  border-color: var(--line);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
 .upload-target input {
   height: 1px;
   opacity: 0;

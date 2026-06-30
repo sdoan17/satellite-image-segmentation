@@ -31,6 +31,8 @@ Allow specific frontend origins with a comma-separated list:
 BACKEND_CORS_ORIGINS=https://example.vercel.app,http://localhost:3000 uvicorn backend.app.main:app --port 8000
 ```
 
+Copy `backend/.env.example` for hosted configuration. The backend owns PyTorch model loading, image validation, CORS, `/health`, and `/predict`; it should run on a container or Python service with enough memory for PyTorch and `models/pytorch_model.pth`.
+
 ## Smoke Checks
 
 ```bash
