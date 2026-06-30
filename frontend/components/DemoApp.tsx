@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertCircle, CheckCircle2, CloudOff, Image as ImageIcon, Upload } from "lucide-react";
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 
 import type { ClassInfo, DemoData, SampleInfo, SplitMetrics } from "../lib/demo-data";
 
@@ -20,6 +20,7 @@ type PredictResponse = {
 };
 
 const demoDisclaimer = "Model prediction for demonstration only; not authoritative geospatial analysis.";
+const missingApiMessage = "Live inference is not configured. Curated samples remain available.";
 
 function apiBaseUrl() {
   return process.env.NEXT_PUBLIC_INFERENCE_API_URL?.replace(/\/$/, "") ?? "";
@@ -140,7 +141,15 @@ function MetricsPanel({ data }: { data: DemoData }) {
   );
 }
 
-function UploadPanel({ uploadState, onUpload }: { uploadState: UploadState; onUpload: (event: ChangeEvent<HTMLInputElement>) => void }) {
+function UploadPanel({
+  disabled,
+  uploadState,
+  onUpload,
+}: {
+  disabled: boolean;
+  uploadState: UploadState;
+  onUpload: (event: ChangeEvent<HTMLInputElement>) => void;
+}) {
   const statusIcon = uploadState.status === "error" ? <CloudOff aria-hidden="true" size={18} /> : <Upload aria-hidden="true" size={18} />;
 
   return (
@@ -149,10 +158,10 @@ function UploadPanel({ uploadState, onUpload }: { uploadState: UploadState; onUp
         <p className="eyebrow">Optional Upload</p>
         <h2 id="upload-heading">Try Live Inference</h2>
       </div>
-      <label className="upload-target">
+      <label className={disabled ? "upload-target upload-target-disabled" : "upload-target"}>
         <Upload aria-hidden="true" size={22} />
         <span>Upload a satellite-style image</span>
-        <input accept="image/*" aria-label="Upload a satellite-style image" onChange={onUpload} type="file" />
+        <input accept="image/*" aria-label="Upload a satellite-style image" disabled={disabled} onChange={onUpload} type="file" />
       </label>
       <div className={`upload-status upload-${uploadState.status}`}>
         {statusIcon}
@@ -169,13 +178,55 @@ function UploadPanel({ uploadState, onUpload }: { uploadState: UploadState; onUp
 }
 
 export default function DemoApp({ data }: { data: DemoData }) {
+  const configuredApiBaseUrl = apiBaseUrl();
   const [selectedSample, setSelectedSample] = useState(data.samples[0]);
+  const [backendUnavailable, setBackendUnavailable] = useState(!configuredApiBaseUrl);
   const [uploadState, setUploadState] = useState<UploadState>({
     status: "idle",
-    message: apiBaseUrl()
+    message: configuredApiBaseUrl
       ? "Choose an image to request a model prediction from the configured backend."
-      : "Live inference is not configured. Curated samples remain available.",
+      : missingApiMessage,
   });
+
+  useEffect(() => {
+    if (!configuredApiBaseUrl) {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function checkHealth() {
+      try {
+        const response = await fetch(`${configuredApiBaseUrl}/health`, { method: "GET" });
+        const payload = await response.json().catch(() => ({}));
+        if (cancelled || response.ok) {
+          return;
+        }
+
+        const reason = typeof payload.error === "string" && payload.error ? ` ${payload.error}` : "";
+        setBackendUnavailable(true);
+        setUploadState({
+          status: "error",
+          message: `Backend health check failed.${reason} Curated samples remain available.`,
+        });
+      } catch {
+        if (cancelled) {
+          return;
+        }
+        setBackendUnavailable(true);
+        setUploadState({
+          status: "error",
+          message: "Backend health check failed. Curated samples remain available.",
+        });
+      }
+    }
+
+    void checkHealth();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [configuredApiBaseUrl]);
 
   const sampleContext = useMemo(() => {
     if (selectedSample.predictionSource === "generated_placeholder") {
@@ -195,6 +246,13 @@ export default function DemoApp({ data }: { data: DemoData }) {
       setUploadState({
         status: "error",
         message: "Live inference is not configured. Set NEXT_PUBLIC_INFERENCE_API_URL to enable upload predictions.",
+      });
+      return;
+    }
+    if (backendUnavailable) {
+      setUploadState({
+        status: "error",
+        message: missingApiMessage,
       });
       return;
     }
@@ -264,7 +322,7 @@ export default function DemoApp({ data }: { data: DemoData }) {
         </div>
         <aside className="side-rail">
           <Legend classes={data.classes} />
-          <UploadPanel uploadState={uploadState} onUpload={handleUpload} />
+          <UploadPanel disabled={backendUnavailable || uploadState.status === "loading"} uploadState={uploadState} onUpload={handleUpload} />
         </aside>
       </section>
 
