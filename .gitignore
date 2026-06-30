@@ -25,6 +25,14 @@ data/
 .idea/
 *.swp
 
+# Frontend local outputs
+node_modules/
+frontend/.next/
+frontend/node_modules/
+frontend/.env*
+!frontend/.env.example
+.vercel/
+
 # Model artifacts: keep only the primary checkpoint in source control.
 models/*.pth
 !models/pytorch_model.pth

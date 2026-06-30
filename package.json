@@ -1,0 +1,13 @@
+{
+  "name": "satellite-image-segmentation",
+  "packageManager": "pnpm@11.7.0",
+  "private": true,
+  "scripts": {
+    "build": "pnpm --dir frontend build"
+  },
+  "dependencies": {
+    "next": "^14.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
