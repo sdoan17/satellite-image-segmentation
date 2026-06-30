@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-25T23:37:19Z",
+  "class_names": [
+    "building",
+    "land",
+    "road",
+    "vegetation",
+    "water",
+    "unlabeled"
+  ],
+  "samples": [
+    {
+      "id": "01-image1",
+      "source_image": "image1.jpg",
+      "original": "01-image1-original.jpg",
+      "prediction": "01-image1-prediction.png",
+      "overlay": "01-image1-overlay.png",
+      "prediction_source": "generated_placeholder",
+      "notes": "Placeholder prediction generated without the PyTorch runtime. Regenerate with model-backed predictions when the DubaiDataset is available."
+    },
+    {
+      "id": "02-image2",
+      "source_image": "image2.jpg",
+      "original": "02-image2-original.jpg",
+      "prediction": "02-image2-prediction.png",
+      "overlay": "02-image2-overlay.png",
+      "prediction_source": "generated_placeholder",
+      "notes": "Placeholder prediction generated without the PyTorch runtime. Regenerate with model-backed predictions when the DubaiDataset is available."
+    }
+  ]
+}
