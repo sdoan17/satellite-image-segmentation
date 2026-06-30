@@ -70,6 +70,13 @@ The current `not_run` metrics mean this repository has the evaluation pipeline a
 
 Use Python 3.9 or newer. Commands are intended to run from the repository root unless noted otherwise.
 
+Public clone path:
+
+```bash
+git clone https://github.com/sdoan17/satellite-image-segmentation.git
+cd satellite-image-segmentation
+```
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
@@ -186,6 +193,16 @@ python3 -m json.tool docs/evaluation/samples/metadata.json >/dev/null
 - The backend accepts satellite-style image uploads for demonstration, but the model is only as reliable as its training data, preprocessing assumptions, and evaluation coverage.
 - This project does not perform production GIS validation, coordinate-aware analysis, sensor calibration, or real-world change detection.
 - Large model artifacts can make cloning and hosting heavier. Keep [`models/pytorch_model.pth`](models/pytorch_model.pth) as the intentional checkpoint unless a replacement policy is documented.
+
+## Publication Policy
+
+This public repository intentionally includes source code, documentation, notebooks, curated sample images, generated evaluation JSON, frontend-ready demo artifacts, and the selected [`models/pytorch_model.pth`](models/pytorch_model.pth) checkpoint. The checkpoint is kept in normal Git for portfolio review and backend smoke checks; avoid adding duplicate checkpoints or ad hoc model exports.
+
+Local-only runtime files stay out of the public surface: `.env` files, virtual environments, caches, `node_modules/`, Vercel state, the local `DubaiDataset/` directory, and generated scratch outputs are ignored. Before publishing future updates, run `git status --short --ignored` and review large tracked files with:
+
+```bash
+git ls-files | xargs -I{} du -h "{}" | sort -hr | head -40
+```
 
 ## Project Direction
 
