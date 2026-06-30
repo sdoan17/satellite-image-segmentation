@@ -78,7 +78,13 @@ git clone https://github.com/sdoan17/satellite-image-segmentation.git
 cd satellite-image-segmentation
 ```
 
-If you only need the docs, frontend, or source code and do not need the checkpoint locally, clone with `GIT_LFS_SKIP_SMUDGE=1` and fetch LFS artifacts later with `git lfs pull`.
+If you only need the docs, frontend, or source code and do not have Git LFS installed, clone without the LFS filter:
+
+```bash
+git -c filter.lfs.process= -c filter.lfs.smudge= -c filter.lfs.clean= -c filter.lfs.required=false clone https://github.com/sdoan17/satellite-image-segmentation.git
+```
+
+Install Git LFS and run `git lfs pull` later when you need the checkpoint.
 
 ```bash
 python3 -m venv .venv
