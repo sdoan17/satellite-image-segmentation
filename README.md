@@ -216,3 +216,5 @@ git ls-files | xargs -I{} du -h "{}" | sort -hr | head -40
 ## Project Direction
 
 The broader implementation plan is tracked in [`docs/plans/2026-06-23-001-feat-satellite-demo-deployment-plan.md`](docs/plans/2026-06-23-001-feat-satellite-demo-deployment-plan.md). The v1 direction is a public portfolio project that keeps the ML evidence, inference API, frontend demo, and deployment boundaries aligned without overstating model authority.
+
+The completed implementation dependency graph is recorded in [`docs/dependency-map.md`](docs/dependency-map.md), including issue order, parallelization opportunities, and coordination notes for the #1-#8 workstream.
